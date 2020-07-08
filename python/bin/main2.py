@@ -15,7 +15,6 @@ r= sr.Recognizer()
 name=input("Benvenuto, digita il tuo nome per entraPremi un tasto per cominciare a parlare")
 
 
-
 def main():
     tz_Rome = pytz.timezone('Europe/Rome')
 
@@ -50,7 +49,7 @@ def main():
             key="key"
 
 
-            
+
             json_str='{ "'+name+'" : [ '
             for word in wordArray[:-1]:
 
