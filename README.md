@@ -1,5 +1,6 @@
 # SpeechAnalyzer
 
+### Setup Spark
 Aggiungere il file [spark-2.4.5-bin-hadoop2.7.tgz][1] sulla directory spark/setup/
 
 
