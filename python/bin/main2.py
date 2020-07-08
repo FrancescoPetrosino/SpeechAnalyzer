@@ -12,7 +12,7 @@ from datetime import datetime
 import pytz
 
 r= sr.Recognizer()
-name=input("Benvenuto, digita il tuo nome per entraPremi un tasto per cominciare a parlarere")
+name=input("Benvenuto, digita il tuo nome per entraPremi un tasto per cominciare a parlare")
 
 
 
@@ -39,23 +39,31 @@ def main():
             print("you have said :" + text)
             
             final_txt= (''.join(text)).encode('utf-8').lower()
-            print("Passed encode")
+            #print("Passed encode")
 
             wordArray=final_txt.decode().split(' ')
             print(wordArray)
-            print("Passed split")
+            #print("Passed split")
 
+            #prefabs
+            date=datetime_Rome.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
+            key="key"
+
+
+            
             json_str='{ "'+name+'" : [ '
             for word in wordArray[:-1]:
-                date=datetime_Rome.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
+
                 print(date)
-                tmp='{"'+word+'":"'+date+'"},'
+                tmp='{"'+key+'":"'+word+'"},'
                 json_str+=tmp
 
-            date=datetime_Rome.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
-            json_str+='{"'+wordArray[-1]+'":"'+date+'"}'
+            #date=datetime_Rome.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
+            json_str+='{"'+key+'":"'+wordArray[-1]+'"}'
             json_str+=']}'
-            # print(json_str)
+            
+            
+            print(json_str)
 
             producer = KafkaProducer(bootstrap_servers=['192.168.1.28:9092']
             ,
