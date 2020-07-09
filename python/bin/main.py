@@ -1,83 +1,114 @@
 import speech_recognition as sr
 import json
 import os
+from json import dumps
+import pyaudio
+from kafka import KafkaProducer
 
-import subprocess
 import threading,time
-WAIT_TIME_SECONDS = 10
-isListen=False
-
+WAIT_TIME_SECONDS = 1
+import time
 from datetime import datetime
 import pytz
 
-r= sr.Recognizer()
+r = sr.Recognizer()
+name = raw_input("Benvenuto, digita il tuo nome per entrare: ")
+#name = "turi"
 
+pa = pyaudio.PyAudio()
+deviceIndex = 0
+'''
+for i in range(pa.get_device_count()) :
+    print(pa.get_device_info_by_index(i))
+    print( "----")
+    if pa.get_device_info_by_index(i).get("name") == "hdmi" :
+        deviceIndex = i
+'''
 def main():
-    #tz_Rome = pytz.timezone('Europe/Rome')
+    tz_Rome = pytz.timezone('Europe/Rome')
 
-    #datetime_Rome=datetime.now(tz_Rome)
+    datetime_Rome = datetime.now(tz_Rome)
 
     with sr.Microphone() as source:
         r.adjust_for_ambient_noise(source)
 
 
-        print("Current dir"+os.getcwd())
-        
+        #print("Current dir"+os.getcwd())
+        #input("Premi un tasto per cominciare a parlare")
         print("Comincia a parlare")
 
-        isListen = True
         audio = r.listen(source)
         print("elaboro il messaggio")
-        isListen = False
 
-        file = open("testo.txt","a+")
+       # file = open("testo.txt","w+")
 
         try:
             text = r.recognize_google(audio,language="it-IT")
-            print("you have said :" + text)
+            #print("you have said :" + text)
             
             final_txt= (''.join(text)).encode('utf-8').lower()
+            #print("Passed encode")
 
-            wordArray=final_txt.split(' ')
-            print(wordArray)
+            wordArray=final_txt.decode().split(' ')
+            #print(wordArray)
+            #print("Passed split")
 
-            json_str='{ "Discorso" : [ '
+            #prefabs
+            date=datetime_Rome.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
+            key="key"
+            fieldname="name"
+
+            '''
+            #approccio 1
+            json_str='{"'+fieldname+'":"'+name+'" , "message" : [ '
             for word in wordArray[:-1]:
-                date=datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
+
                 print(date)
-                tmp='{"'+word+'":"'+date+'"},'
+                tmp='{"'+key+'":"'+word+'"},'
                 json_str+=tmp
 
-            date=datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
-            json_str+='{"'+wordArray[-1]+'":"'+date+'"}'
+            #date=datetime_Rome.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
+            json_str+='{"'+key+'":"'+wordArray[-1]+'"}'
             json_str+=']}'
+            
+
+            #approccio 2
+            json_str = ''
+            for word in wordArray[:-1] :
+                json_str += '{"' + name + '" : "' + word + '"}, '
+
+            json_str += '{"' + name + '" : "' + wordArray[-1] + '"}'
+            '''
+
+            #approccio 3
+            json_str='{"'+fieldname+'":"'+name+'" , "message" : "'
+            for word in wordArray[:-1] :
+                json_str += word + ' '
+            json_str += wordArray[-1] +'"}'
+
             print(json_str)
 
+            producer = KafkaProducer(bootstrap_servers=['192.168.1.28:9092'],
+            value_serializer=lambda x: 
+            dumps(x).encode('utf-8')
+            )
+            
+            data = json_str
 
-        # jsonObj = json.loads(json_str)
+            producer.send('myTap',value=data)
+           
 
-            file.write(json_str)
-            file.close()
-           # changeDir(json_str)
+
+            producer.flush()
+
 
         except Exception as e:
             print("Error : "+str(e))
 
-def changeDir(x):
-    os.chdir("./Desktop/TapUni/python/bin/")
-    file1 = open ("./testo.txt","a+" )
-    file1.write(x)
-    file1.close()
-    path="../../kafka/"
-    os.chdir(path)
-    print("Cur DIR"+ os.getcwd())
-    subprocess.call(["./kafkaProd.sh"],shell=True)
-    os.chdir("../../../")
-
-    
 #raw_input("Premi un pulsante per cominciare a parlare")
+
+
+
 ticker = threading.Event()
 while not ticker.wait(WAIT_TIME_SECONDS):
- if(isListen==False):
     main()
-    #changeDir(json_str)

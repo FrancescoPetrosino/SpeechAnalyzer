@@ -3,14 +3,18 @@ ENV PATH /usr/src/app/bin:$PATH
 WORKDIR /usr/src/app
 
 COPY requirements.txt ./
+
+RUN apt-get update
+
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install speechrecognition
+RUN pip install SpeechRecognition
 RUN pip install pytz
-RUN apt-get update
 RUN apt-get install -y portaudio19-dev
-RUN apt-get update
-RUN pip install pyaudio
-RUN apt-get update
+RUN pip install PyAudio
+RUN apt-get install -y pulseaudio
+RUN apt-get install -y alsa-utils
+RUN apt-get install alsa-source
 
 
 COPY bin/* ./
