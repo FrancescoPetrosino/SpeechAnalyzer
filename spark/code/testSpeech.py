@@ -14,6 +14,9 @@ import pyspark.sql.types as tp
 from pyspark.sql.types import *
 import pyspark.sql.functions as F
 from pyspark.sql import SQLContext
+import re
+from pyspark.sql.functions import lit
+
 
 
 import sys
@@ -37,32 +40,25 @@ schema = StructType([StructField("name", StringType(), True),StructField("messag
 
 #storage=spark.createDataFrame(sc.emptyRDD[Row], schema)
 storage = sqlContext.createDataFrame(sc.emptyRDD(), schema)
-tmpDf = sqlContext.createDataFrame(sc.emptyRDD(), schema)
-def getInfo(rdd):
+#tmpDf = sqlContext.createDataFrame(sc.emptyRDD(), schema)
 
-    #Prende entrambi
+
+
+def getInfo(rdd):
 
 
     full = rdd.map(lambda (value): json.loads(value)).map(lambda json_object: (json_object["name"], json_object["message"]))
-    #words = full.map(lambda x: x[1])
+    line = full.map(lambda x: x[1])
 
-    #print(words.collect())
+    #counts = words.flatMap(lambda line: line.split(" ")).map(lambda word: (word, 1)).reduceByKey(lambda a, b: a+b)
+    words = line.flatMap(lambda line: line.split(" "))
+    count = words.filter(lambda w : w.find("*")>=0).count()
 
-    #counts = words.flatMap(lambda line: line.split(" ")).map(lambda word: (word, 1)).reduceByKey(lambda a, b: a+b).sum()
-
-    print("***")
+    print("---")
+    print(words.collect())
+    print(count)
     #print(counts)
     #counts.pprint()
-    '''
-    name1=full.map(lambda x: (x[0]))
-    nameCollect=name1.collect()
-    print(nameCollect)
-
-    message1=full.map(lambda x: (x[0]))
-    messageCollect=message1.collect()
-    print(messageCollect)
-    '''
-
 
     #name=rdd.map(lambda (value): json.loads(value)).map(lambda json_object: json_object["name"])
     #message=rdd.map(lambda (value): json.loads(value)).map(lambda json_object: json_object["message"])
@@ -70,10 +66,8 @@ def getInfo(rdd):
     df3 = sqlContext.createDataFrame(full, schema)
 
     appendend  = storage.union(df3)
-    appendend.withColumn("word_count", F.size(F.split(appendend['message'], ' '))).show(truncate=False)
-    #storage=tmpDf.union(df3)
-    appendend.show()
-
+    appendend=appendend.withColumn("word_count", F.size(F.split(appendend['message'], ' ')))
+    appendend.withColumn("profanity_count",F.lit(count)).show(truncate=False)
 
 kvs = KafkaUtils.createStream(ssc, zkQuorum, "spark-streaming-consumer", {topic: 1},)
 #kvs.pprint()
