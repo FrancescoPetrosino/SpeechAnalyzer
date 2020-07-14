@@ -11,6 +11,10 @@ import time
 from datetime import datetime
 import pytz
 
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
+
 r = sr.Recognizer()
 name = raw_input("Benvenuto, digita il tuo nome per entrare: ")
 #name = "turi"
@@ -24,6 +28,23 @@ for i in range(pa.get_device_count()) :
     if pa.get_device_info_by_index(i).get("name") == "hdmi" :
         deviceIndex = i
 '''
+
+
+def check_offline(text):
+    list_pro = open('./python/bin/badwords.txt','r+')
+    content = list_pro.read()
+    list_content = content.split('\n')
+    for word in list_content :
+        if word in text :
+            remplacement = "*" * len(word)
+            text = text.replace(word ,remplacement)
+            print word
+            print remplacement
+    return text
+
+
+
+
 def main():
     tz_Rome = pytz.timezone('Europe/Rome')
 
@@ -47,9 +68,12 @@ def main():
             #print("you have said :" + text)
             
             final_txt= (''.join(text)).encode('utf-8').lower()
-            #print("Passed encode")
+            print("Final text : "+final_txt)
 
-            wordArray=final_txt.decode().split(' ')
+            filter_text=check_offline(final_txt)
+            print("Testo filtrato - : "+filter_text)
+
+            wordArray=filter_text.decode().split(' ')
             #print(wordArray)
             #print("Passed split")
 
@@ -111,4 +135,5 @@ def main():
 
 ticker = threading.Event()
 while not ticker.wait(WAIT_TIME_SECONDS):
+    #print(os.getcwd())
     main()
