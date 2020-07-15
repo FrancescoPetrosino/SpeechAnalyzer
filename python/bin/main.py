@@ -7,9 +7,9 @@ from kafka import KafkaProducer
 
 import threading,time
 WAIT_TIME_SECONDS = 1
-import time
-from datetime import datetime
-import pytz
+#import time
+#from datetime import datetime
+
 
 import sys
 reload(sys)
@@ -38,17 +38,15 @@ def check_offline(text):
         if word in text :
             remplacement = "*" * len(word)
             text = text.replace(word ,remplacement)
-            print word
-            print remplacement
+            #print word
+            #print remplacement
     return text
 
 
 
 
 def main():
-    tz_Rome = pytz.timezone('Europe/Rome')
-
-    datetime_Rome = datetime.now(tz_Rome)
+    
 
     with sr.Microphone() as source:
         r.adjust_for_ambient_noise(source)
@@ -78,7 +76,7 @@ def main():
             #print("Passed split")
 
             #prefabs
-            date=datetime_Rome.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
+            
             key="key"
             fieldname="name"
 

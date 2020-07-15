@@ -16,7 +16,11 @@ import pyspark.sql.functions as F
 from pyspark.sql import SQLContext
 import re
 from pyspark.sql.functions import lit
+import pytz
+from datetime import datetime
 
+tz_Rome = pytz.timezone('Europe/Rome')
+datetime_Rome = datetime.now(tz_Rome)
 
 
 import sys
@@ -55,10 +59,12 @@ def getInfo(rdd):
     count = words.filter(lambda w : w.find("*")>=0).count()
 
     print("---")
-    print(words.collect())
-    print(count)
-    #print(counts)
-    #counts.pprint()
+    print("My time \n")
+    #print(datetime.datetime.now())
+    #print(datetime_Rome.now())
+    #print(words.collect())
+    #print(count)
+
 
     #name=rdd.map(lambda (value): json.loads(value)).map(lambda json_object: json_object["name"])
     #message=rdd.map(lambda (value): json.loads(value)).map(lambda json_object: json_object["message"])
@@ -67,7 +73,10 @@ def getInfo(rdd):
 
     appendend  = storage.union(df3)
     appendend=appendend.withColumn("word_count", F.size(F.split(appendend['message'], ' ')))
-    appendend.withColumn("profanity_count",F.lit(count)).show(truncate=False)
+    appendend=appendend.withColumn("profanity_count",F.lit(count))
+    appendend=appendend.withColumn("time",F.lit(datetime_Rome.now())).show(truncate=False)
+
+
 
 kvs = KafkaUtils.createStream(ssc, zkQuorum, "spark-streaming-consumer", {topic: 1},)
 #kvs.pprint()

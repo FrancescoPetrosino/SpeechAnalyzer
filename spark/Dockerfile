@@ -10,6 +10,7 @@ ADD ./setup/spark-${SPARK_VERSION}-bin-hadoop2.7.tgz /opt
 RUN apt-get update && apt-get -y install bash python python-pip
 
 RUN pip install pyspark
+RUN pip install pytz
 # Create Sym Link 
 RUN ln -s /opt/spark-${SPARK_VERSION}-bin-hadoop2.7 ${SPARK_DIR} 
 #ADD ./dataset/* /opt/tap/dataset
