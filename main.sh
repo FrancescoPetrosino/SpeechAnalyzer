@@ -1,12 +1,26 @@
 #Install py requirements
-#sudo apt-get install pip
-sudo apt-get install python3-pip
+echo "Installo le componenti essenziali.."
 
-#pip install SpeechRecognition
-pip3 install SpeechRecognition
+echo "[1/] Installo pip..\n"
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python2.7 get-pip.py
+rm get-pip.py
 
-sudo apt-get install python3-pyaudio
-pip3 install kafka-python
+echo "[2/] Installo pulseaudio..\n"
+snap install pulseaudio
+
+echo "[3/] Installo portaudio..\n"
+sudo apt install python-dev
+sudo apt install portaudio19-dev
+
+echo "[4/] Installo SpeechRecognition..\n"
+python2.7 -m pip install SpeechRecognition
+
+echo "[5/] Installo PyAudio..\n"
+python2.7 -m pip install PyAudio
+
+echo "[6/] Installo Kafka-Python..\n"
+python2.7 -m pip install kafka-python
 
 
 # Run main.py
