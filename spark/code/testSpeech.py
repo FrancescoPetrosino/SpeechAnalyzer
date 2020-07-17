@@ -3,12 +3,11 @@ import sys
 import json
 from json import loads
 from pyspark import SparkContext
+
 from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
-#from urllib.parse import unquote
 from pyspark.sql import Row
-#import org.apache.spark.sql.Row
-#from pyspark.sql import Col
+
 from pyspark.sql.session import SparkSession
 import pyspark.sql.types as tp
 from pyspark.sql.types import *

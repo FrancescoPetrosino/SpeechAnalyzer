@@ -19,6 +19,10 @@ from pathlib import Path
 
 
 
+import joblib
+
+
+
 '''
 data = pd.read_csv("abcnews-date-text.csv",error_bad_lines=False,usecols =["headline_text"])
 #print(data.head())
@@ -88,7 +92,11 @@ for num, centroid in enumerate(common_words):
     print(str(num) + ' : ' + ', '.join(words[word] for word in centroid))
 
 
+filename = 'k_model.sav'
+joblib.dump(kmeans, filename)
 
+'''
 Y = vectorizer3.transform(["in order to use the software you have to open a browser"])
 prediction = kmeans.predict(Y)
 print(prediction)
+'''
