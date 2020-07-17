@@ -19,6 +19,9 @@ from pyspark.sql.functions import lit
 import pytz
 from datetime import datetime
 
+from googletrans import Translator
+translator = Translator()
+
 tz_Rome = pytz.timezone('Europe/Rome')
 datetime_Rome = datetime.now(tz_Rome)
 
@@ -50,6 +53,9 @@ storage = sqlContext.createDataFrame(sc.emptyRDD(), schema)
 
 def getInfo(rdd):
 
+    translated = translator.translate('ciao', src='it',dest='en')
+    print(translated.text)
+
 
     full = rdd.map(lambda (value): json.loads(value)).map(lambda json_object: (json_object["name"], json_object["message"]))
     line = full.map(lambda x: x[1])
@@ -58,8 +64,9 @@ def getInfo(rdd):
     words = line.flatMap(lambda line: line.split(" "))
     count = words.filter(lambda w : w.find("*")>=0).count()
 
+
     print("---")
-    print("My time \n")
+    #print("My time \n")
     #print(datetime.datetime.now())
     #print(datetime_Rome.now())
     #print(words.collect())
@@ -72,7 +79,7 @@ def getInfo(rdd):
     df3 = sqlContext.createDataFrame(full, schema)
 
     appendend  = storage.union(df3)
-    appendend=appendend.withColumn("word_count", F.size(F.split(appendend['message'], ' ')))
+    appendend=appendend.withColumn("word_count", F.size(F.split(appendend['message'],' ')))
     appendend=appendend.withColumn("profanity_count",F.lit(count))
     appendend=appendend.withColumn("time",F.lit(datetime_Rome.now())).show(truncate=False)
 
