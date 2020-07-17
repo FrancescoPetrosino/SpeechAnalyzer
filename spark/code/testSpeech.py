@@ -19,8 +19,7 @@ from pyspark.sql.functions import lit
 import pytz
 from datetime import datetime
 
-from googletrans import Translator
-translator = Translator()
+
 
 tz_Rome = pytz.timezone('Europe/Rome')
 datetime_Rome = datetime.now(tz_Rome)
@@ -52,9 +51,6 @@ storage = sqlContext.createDataFrame(sc.emptyRDD(), schema)
 
 
 def getInfo(rdd):
-
-    translated = translator.translate('ciao', src='it',dest='en')
-    print(translated.text)
 
 
     full = rdd.map(lambda (value): json.loads(value)).map(lambda json_object: (json_object["name"], json_object["message"]))
