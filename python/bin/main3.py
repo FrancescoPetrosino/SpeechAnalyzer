@@ -11,12 +11,10 @@ WAIT_TIME_SECONDS = 1
 
 
 
-import sys
-sys.path.insert(1, './MachineL')
-from MachineL import MLAPI as ml
 
-myML = ml.MLAPI()
+from MachineL.API import MLAPI
 
+obj = MLAPI()
 
 
 
@@ -75,6 +73,9 @@ def main():
 
             translated = translator.translate(filter_text, src="it",dest='en')
             print("Testo filtrato - EN : "+translated.text)
+
+
+            obj.getPrediction(translated.text)
 
 
             wordArray=translated.text.split(' ')

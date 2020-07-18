@@ -53,5 +53,13 @@ common_words = kmeans.cluster_centers_.argsort()[:,-1:-35:-1]
 for num, centroid in enumerate(common_words):
     print(str(num) + ' : ' + ', '.join(words[word] for word in centroid))
 
+
+
 filename = 'python/bin/MachineL/k_model.sav'
 joblib.dump(kmeans, filename)
+
+joblib.dump(vectorizer3, 'python/bin/MachineL/vectroizer.pkl')
+
+Y = vectorizer3.transform(["today my team has scored 4 goals"])
+prediction = kmeans.predict(Y)
+print(prediction)
