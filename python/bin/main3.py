@@ -7,13 +7,16 @@ from kafka import KafkaProducer
 
 import threading,time
 WAIT_TIME_SECONDS = 1
-#import time
-#from datetime import datetime
+
+
+
 
 
 import sys
-#reload(sys)
-#sys.setdefaultencoding("utf-8")
+sys.path.insert(1, './MachineL')
+from MachineL import MLAPI as ml
+
+myML = ml.MLAPI()
 
 from googletrans import Translator
 translator = Translator()
@@ -25,14 +28,6 @@ name = input("Benvenuto, digita il tuo nome per entrare: ")
 
 pa = pyaudio.PyAudio()
 deviceIndex = 0
-'''
-for i in range(pa.get_device_count()) :
-    print(pa.get_device_info_by_index(i))
-    print( "----")
-    if pa.get_device_info_by_index(i).get("name") == "hdmi" :
-        deviceIndex = i
-'''
-
 
 def check_offline(text):
     list_pro = open('./python/bin/badwords.txt','r+')
@@ -135,10 +130,6 @@ def main():
 
         except Exception as e:
             print("Error : "+str(e))
-
-#raw_input("Premi un pulsante per cominciare a parlare")
-
-
 
 ticker = threading.Event()
 while not ticker.wait(WAIT_TIME_SECONDS):
