@@ -11,12 +11,14 @@ WAIT_TIME_SECONDS = 1
 
 
 
-
 import sys
 sys.path.insert(1, './MachineL')
 from MachineL import MLAPI as ml
 
 myML = ml.MLAPI()
+
+
+
 
 from googletrans import Translator
 translator = Translator()
@@ -29,6 +31,8 @@ name = input("Benvenuto, digita il tuo nome per entrare: ")
 pa = pyaudio.PyAudio()
 deviceIndex = 0
 
+
+
 def check_offline(text):
     list_pro = open('./python/bin/badwords.txt','r+')
     content = list_pro.read()
@@ -40,8 +44,6 @@ def check_offline(text):
             #print word
             #print remplacement
     return text
-
-
 
 
 def main():

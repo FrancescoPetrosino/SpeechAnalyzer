@@ -25,9 +25,13 @@ class MLAPI:
         return [stemmer.stem(word) for word in tokenizer.tokenize(text.lower())]
 
     def __init__(self):
+        tokenizer = RegexpTokenizer(r'[a-zA-Z\']+')
+        stemmer = SnowballStemmer('english')
         k_model = joblib.load("python/bin/MachineL/k_model.sav")
         punc = ['.', ',', '"', "'", '?', '!', ':', ';', '(', ')', '[', ']', '{', '}',"%"]
         stop_words = text.ENGLISH_STOP_WORDS.union(punc)
+
+        
         vectorizer3 = TfidfVectorizer(stop_words = stop_words, tokenizer = tokenize, max_features = 1000)
         
 
