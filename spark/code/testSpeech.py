@@ -38,7 +38,7 @@ sqlContext = SQLContext(sc)
 zkQuorum="127.0.0.1:2181"
 topic = "myTap"
 
-schema = StructType([StructField("name", StringType(), True),StructField("message", StringType(), True)])
+schema = StructType([StructField("name", StringType(), True),StructField("message", StringType(), True),StructField("topic", StringType(),True)])
 #cols = ['name', 'message']
 
 
@@ -52,8 +52,12 @@ storage = sqlContext.createDataFrame(sc.emptyRDD(), schema)
 def getInfo(rdd):
 
 
-    full = rdd.map(lambda (value): json.loads(value)).map(lambda json_object: (json_object["name"], json_object["message"]))
+    full = rdd.map(lambda (value): json.loads(value)).map(lambda json_object: (json_object["name"], json_object["message"],json_object["topic"]))
+    #full2 = rdd.map(lambda (value): json.loads(value)).map(lambda json_object: (json_object["name"], json_object["topic"]))
+
     line = full.map(lambda x: x[1])
+    #number = full2.map(lambda x: x[1])
+    #numberPredict = full.map(lambda x: x[2])
 
     #counts = words.flatMap(lambda line: line.split(" ")).map(lambda word: (word, 1)).reduceByKey(lambda a, b: a+b)
     words = line.flatMap(lambda line: line.split(" "))
