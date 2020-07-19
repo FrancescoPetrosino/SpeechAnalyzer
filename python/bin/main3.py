@@ -9,12 +9,13 @@ import threading,time
 WAIT_TIME_SECONDS = 1
 
 
+import joblib
 
 
 
 from MachineL.API import MLAPI
+model = MLAPI()
 
-obj = MLAPI()
 
 
 
@@ -56,27 +57,27 @@ def main():
         print("Comincia a parlare")
 
         audio = r.listen(source)
-        print(audio)
+        #print(audio)
         print("elaboro il messaggio")
 
        # file = open("testo.txt","w+")
 
         try:
             text = r.recognize_google(audio,language="it-IT")
-            print("you have said :" + text)
+            #kikprint("you have said :" + text)
             
             final_txt= (''.join(text)).lower()
-            print("Final text : "+final_txt)
+            #print("Final text : "+final_txt)
 
             filter_text=check_offline(final_txt)
             print("Testo filtrato - IT : "+filter_text)
 
             translated = translator.translate(filter_text, src="it",dest='en')
             print("Testo filtrato - EN : "+translated.text)
-
-
-            obj.getPrediction(translated.text)
-
+                 
+            
+            number = model.getPrediction(translated.text)
+            print( " predetto : -- "+str(number))
 
             wordArray=translated.text.split(' ')
             #print(wordArray)
@@ -86,6 +87,7 @@ def main():
             
             key="key"
             fieldname="name"
+            topic = "topic"
 
             '''
             #approccio 1
@@ -113,7 +115,7 @@ def main():
             json_str='{"'+fieldname+'":"'+name+'" , "message" : "'
             for word in wordArray[:-1] :
                 json_str += word + ' '
-            json_str += wordArray[-1] +'"}'
+            json_str += wordArray[-1] +'","'+topic+'" : "'+number+'"}'
 
             print(json_str)
 
