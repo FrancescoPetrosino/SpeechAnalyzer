@@ -8,4 +8,4 @@ docker container rm elasticsearch
 # Build
 docker build ./ --tag tap:elasticsearch
 
-docker run -t  -p 9200:9200 -p 9300:9300 --ip 10.0.100.51 --name elasticsearch --network tap -e "discovery.type=single-node"  tap:elasticsearch
+docker run -t  -p 9200:9200 -p 9300:9300  --name elasticsearch --network host -e "discovery.type=single-node"  tap:elasticsearch
