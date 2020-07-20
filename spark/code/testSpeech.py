@@ -48,6 +48,16 @@ elastic_document="_doc"
 '''
 #conf1
 
+
+
+------------------------------------------------------------------------
+#conf2
+conf={ "es.resource" : "<INDEX> / <INDEX>", "es.mapping.id":"id", 
+         "es.input.json": "true", "es.net.http.auth.user":"elastic",
+         "es.write.operation":"index", "es.nodes.wan.only":"false",
+         "es.net.http.auth.pass":"changeme", "es.nodes":"<NODE1>, <NODE2>, <NODE3>...",
+         "es.port":"9200" })
+'''
 es_write_conf = {
 # specify the node that we are sending data to (this should be the master)
 "es.nodes" : elastic_host,
@@ -58,16 +68,6 @@ es_write_conf = {
 # is the input JSON?
 "es.input.json" : "yes"
 }
-
-------------------------------------------------------------------------
-#conf2
-conf={ "es.resource" : "<INDEX> / <INDEX>", "es.mapping.id":"id", 
-         "es.input.json": "true", "es.net.http.auth.user":"elastic",
-         "es.write.operation":"index", "es.nodes.wan.only":"false",
-         "es.net.http.auth.pass":"changeme", "es.nodes":"<NODE1>, <NODE2>, <NODE3>...",
-         "es.port":"9200" })
-'''
-
 # Elastic Search
 conf = SparkConf(loadDefaults=False)
 conf.set("es.index.auto.create", "true")
@@ -97,8 +97,8 @@ def transform(doc):
         id = doc['id']
     _json = json.dumps(doc)
 
-    print(_json)
-    return (id, _json)
+    #print(_json)
+    return (_json)
 
 
 def getInfo(rdd):
@@ -140,17 +140,14 @@ def getInfo(rdd):
     
     #Metodo2
     rdd_mapped = appendend.rdd.map(lambda y: y.asDict())
-    final_rdd = rdd_mapped.map(transform)
+    result_rdd = rdd_mapped.map(transform)
+    final_rdd = result_rdd.map(lambda x: ('key', x))
     final_rdd.saveAsNewAPIHadoopFile(
     path='-',
     outputFormatClass="org.elasticsearch.hadoop.mr.EsOutputFormat",
     keyClass="org.apache.hadoop.io.NullWritable",
     valueClass="org.elasticsearch.hadoop.mr.LinkedMapWritable",
-    conf={ "es.resource" : "<INDEX> / <INDEX>", "es.mapping.id":"id", 
-         "es.input.json": "true", "es.net.http.auth.user":"elastic",
-         "es.write.operation":"index", "es.nodes.wan.only":"false",
-         "es.nodes":"<NODE1>, <NODE2>, <NODE3>...",
-         "es.port":"9200" })
+    conf=es_write_conf)
 
 
 kvs = KafkaUtils.createStream(ssc, zkQuorum, "spark-streaming-consumer", {topic: 1},)
