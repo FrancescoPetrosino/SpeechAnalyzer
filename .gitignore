@@ -1,1 +1,5 @@
 ./spark/setup/spark-2.4.5-bin-hadoop2.7.tgz
+./python/bin/MachineL/k_model.sav
+./python/bin/MachineL/model.pkl
+./python/bin/MachineL/vectroizer.pkl
+./python/bin/model.py
