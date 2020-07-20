@@ -7,7 +7,7 @@ from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
 from pyspark.sql import Row
-
+from pyspark.conf import SparkConf
 from pyspark.sql.session import SparkSession
 import pyspark.sql.types as tp
 from pyspark.sql.types import *
@@ -17,6 +17,9 @@ import re
 from pyspark.sql.functions import lit
 import pytz
 from datetime import datetime
+
+
+from elasticsearch import Elasticsearch
 
 
 
@@ -37,6 +40,29 @@ sqlContext = SQLContext(sc)
 
 zkQuorum="127.0.0.1:2181"
 topic = "myTap"
+
+elastic_host="localhost"
+elastic_index="users"
+elastic_document="_doc"
+
+
+es_write_conf = {
+# specify the node that we are sending data to (this should be the master)
+"es.nodes" : elastic_host,
+# specify the port in case it is not the default port
+"es.port" : '9200',
+# specify a resource in the form 'index/doc-type'
+"es.resource" : '%s/%s' % (elastic_index,elastic_document),
+# is the input JSON?
+"es.input.json" : "yes"
+}
+
+
+# Elastic Search
+conf = SparkConf(loadDefaults=False)
+conf.set("es.index.auto.create", "true")
+
+
 
 schema = StructType([StructField("name", StringType(), True),StructField("message", StringType(), True),StructField("topic", StringType(),True)])
 #cols = ['name', 'message']
@@ -85,35 +111,14 @@ def getInfo(rdd):
 
 
 kvs = KafkaUtils.createStream(ssc, zkQuorum, "spark-streaming-consumer", {topic: 1},)
-#kvs.pprint()
-
-
-
-#print(type(kvs))
-
-#dati arrivati in ordine
 
 lines = kvs.map(lambda x: x[1])
 lines2=lines.map(lambda x: loads(x.encode('utf-8')))
-
-
 lines2.pprint()
 lines2.foreachRDD(getInfo)
 
 
-#Estrapolo il nome
-#lines3 = lines2.map(lambda (value): json.loads(value)).map(lambda json_object:(json_object["name"]))
-#lines3.pprint()
-
-#Estrapolo l'intero messaggio che arriva
-#lines4 = lines2.map(lambda (value): json.loads(value)).map(lambda json_object:(json_object["message"]))
-#lines4.pprint()
-
-
-
-
+elastic = Elasticsearch(hosts=[elastic_host])
 
 ssc.start()
 ssc.awaitTermination()
-
-# { \"name\":\"ciccio\",\"Message\" : [ {\"key\":\"ciao\"},{\"key\":\"come\"},{\"key\":\"stai\"}]}

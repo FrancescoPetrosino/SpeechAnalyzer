@@ -12,7 +12,8 @@ RUN apt-get update && apt-get -y install bash python python-pip
 
 RUN pip install pyspark
 RUN pip install pytz
-
+RUN pip install numpy 
+RUN pip install elasticsearch
 
 # Create Sym Link 
 RUN ln -s /opt/spark-${SPARK_VERSION}-bin-hadoop2.7 ${SPARK_DIR} 
