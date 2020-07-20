@@ -45,6 +45,8 @@ elastic_host="localhost"
 elastic_index="users"
 elastic_document="_doc"
 
+'''
+#conf1
 
 es_write_conf = {
 # specify the node that we are sending data to (this should be the master)
@@ -57,6 +59,14 @@ es_write_conf = {
 "es.input.json" : "yes"
 }
 
+------------------------------------------------------------------------
+#conf2
+conf={ "es.resource" : "<INDEX> / <INDEX>", "es.mapping.id":"id", 
+         "es.input.json": "true", "es.net.http.auth.user":"elastic",
+         "es.write.operation":"index", "es.nodes.wan.only":"false",
+         "es.net.http.auth.pass":"changeme", "es.nodes":"<NODE1>, <NODE2>, <NODE3>...",
+         "es.port":"9200" })
+'''
 
 # Elastic Search
 conf = SparkConf(loadDefaults=False)
@@ -68,11 +78,27 @@ schema = StructType([StructField("name", StringType(), True),StructField("messag
 #cols = ['name', 'message']
 
 
-
 #storage=spark.createDataFrame(sc.emptyRDD[Row], schema)
 storage = sqlContext.createDataFrame(sc.emptyRDD(), schema)
 #tmpDf = sqlContext.createDataFrame(sc.emptyRDD(), schema)
 
+def transform(doc):
+    import hashlib
+
+    _json = json.dumps(doc)
+    keys = doc.keys()
+    for key in keys:
+        if doc[key] == 'null' or doc[key] == 'None':
+            del doc[key]
+    if not doc.has_key('id'):
+        id = hashlib.sha224(_json).hexdigest()
+        doc['id'] = id
+    else:
+        id = doc['id']
+    _json = json.dumps(doc)
+
+    print(_json)
+    return (id, _json)
 
 
 def getInfo(rdd):
@@ -91,23 +117,40 @@ def getInfo(rdd):
 
 
     print("---")
-    #print("My time \n")
-    #print(datetime.datetime.now())
-    #print(datetime_Rome.now())
-    #print(words.collect())
-    #print(count)
-
-
-    #name=rdd.map(lambda (value): json.loads(value)).map(lambda json_object: json_object["name"])
-    #message=rdd.map(lambda (value): json.loads(value)).map(lambda json_object: json_object["message"])
-
     df3 = sqlContext.createDataFrame(full, schema)
 
     appendend  = storage.union(df3)
     appendend=appendend.withColumn("word_count", F.size(F.split(appendend['message'],' ')))
     appendend=appendend.withColumn("profanity_count",F.lit(count))
-    appendend=appendend.withColumn("time",F.lit(datetime_Rome.now())).show(truncate=False)
+    appendend=appendend.withColumn("time",F.lit(datetime_Rome.now()))
+    appendend.show()
 
+    '''
+    #Metodo1
+    appendend.write.format(
+    'org.elasticsearch.spark.sql'
+    ).option(
+    'es.nodes', 'localhost'
+    ).option(
+    'es.port', 9200
+    ).option(
+    'es.resource', '%s/%s' % (elastic_index,elastic_document)
+    ).save()
+    '''
+    
+    #Metodo2
+    rdd_mapped = appendend.rdd.map(lambda y: y.asDict())
+    final_rdd = rdd_mapped.map(transform)
+    final_rdd.saveAsNewAPIHadoopFile(
+    path='-',
+    outputFormatClass="org.elasticsearch.hadoop.mr.EsOutputFormat",
+    keyClass="org.apache.hadoop.io.NullWritable",
+    valueClass="org.elasticsearch.hadoop.mr.LinkedMapWritable",
+    conf={ "es.resource" : "<INDEX> / <INDEX>", "es.mapping.id":"id", 
+         "es.input.json": "true", "es.net.http.auth.user":"elastic",
+         "es.write.operation":"index", "es.nodes.wan.only":"false",
+         "es.nodes":"<NODE1>, <NODE2>, <NODE3>...",
+         "es.port":"9200" })
 
 
 kvs = KafkaUtils.createStream(ssc, zkQuorum, "spark-streaming-consumer", {topic: 1},)
@@ -118,7 +161,34 @@ lines2.pprint()
 lines2.foreachRDD(getInfo)
 
 
+mapping = {
+    "mappings": {
+        "properties": {
+            "timestamp": {
+                "type": "date"
+            }
+        }
+    }
+}
+
 elastic = Elasticsearch(hosts=[elastic_host])
+
+response = elastic.indices.create(
+    index=elastic_index,
+    body=mapping,
+    ignore=400 # ignore 400 already exists code
+)
+
+if 'acknowledged' in response:
+    if response['acknowledged'] == True:
+        print ("INDEX MAPPING SUCCESS FOR INDEX:", response['index'])
+
+# catch API error response
+elif 'error' in response:
+    print ("ERROR:", response['error']['root_cause'])
+    print ("TYPE:", response['error']['type'])
+
+
 
 ssc.start()
 ssc.awaitTermination()

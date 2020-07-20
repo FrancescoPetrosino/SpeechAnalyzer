@@ -1,0 +1,1 @@
+./sparkSubmitPy.sh testSpeech.py "org.apache.spark:spark-streaming-kafka-0-8_2.11:2.4.5, org.elasticsearch:elasticsearch-hadoop:jar:7.7.0"
