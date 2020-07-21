@@ -83,36 +83,6 @@ schema = StructType([StructField("name", StringType(), True),StructField("messag
 storage = sqlContext.createDataFrame(sc.emptyRDD(), schema)
 #tmpDf = sqlContext.createDataFrame(sc.emptyRDD(), schema)
 
-def transform(doc):
-    import hashlib
-
-    _json = json.dumps(doc)
-    keys = doc.keys()
-    for key in keys:
-        if doc[key] == 'null' or doc[key] == 'None':
-            del doc[key]
-    if not doc.has_key('id'):
-        id = hashlib.sha224(_json).hexdigest()
-        doc['id'] = id
-    else:
-        id = doc['id']
-    _json = json.dumps(doc)
-
-    #print(_json)
-    return (_json)
-
-
-def print_rows(row):
-    data = json.loads(row)
-    for key in data:
-        print ("{key}:{value}".format(key=key, value=data[key]))
-
-def json_serial(obj):
-    """JSON serializer for objects not serializable by default json code"""
-
-    if isinstance(obj, (datetime, date)):
-        return obj.isoformat()
-    raise TypeError ("Type %s not serializable" % type(obj))
 
 def getInfo(rdd):
 
@@ -166,7 +136,7 @@ lines2=lines.map(lambda x: loads(x.encode('utf-8')))
 #lines2.pprint()
 lines2.foreachRDD(getInfo)
 
-'''
+
 mapping = {
   "mappings": {
     "properties": {
@@ -188,7 +158,7 @@ mapping = {
         }
     }
 }
-
+'''
 
 elastic = Elasticsearch(hosts=[elastic_host])
 
