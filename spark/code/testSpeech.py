@@ -132,6 +132,7 @@ def getInfo(rdd):
     print("---")
     df3 = sqlContext.createDataFrame(full, schema)
     date_time = datetime_Rome.now().strftime("%m/%d/%Y")
+
     appendend  = storage.union(df3)
     appendend=appendend.withColumn("word_count", F.size(F.split(appendend['message'],' ')))
     appendend=appendend.withColumn("profanity_count",F.lit(count))
@@ -143,9 +144,7 @@ def getInfo(rdd):
     new = appendend.rdd.map(lambda item: {'name': item['name'],'message': item['message'],'profanity_count': item['profanity_count'],'topic': item['topic'],'time': item['time']})
     final_rdd = new.map(json.dumps).map(lambda x: ('key', x))
     print(final_rdd.collect())
-    #print(json.dumps(appendend, indent=4,sort_keys=True,default=str))
-    #results = appendend.toJSON()
-    #results.foreach(print_rows)    
+      
     '''
     #Metodo1
     appendend.write.format(
@@ -165,7 +164,7 @@ def getInfo(rdd):
     final_rdd = result_rdd.map(lambda x: ('key', x))
     '''
 
-    print("***")
+    #print("***")
     #print(final_rdd.collect())
 
     
@@ -181,10 +180,10 @@ kvs = KafkaUtils.createStream(ssc, zkQuorum, "spark-streaming-consumer", {topic:
 
 lines = kvs.map(lambda x: x[1])
 lines2=lines.map(lambda x: loads(x.encode('utf-8')))
-lines2.pprint()
+#lines2.pprint()
 lines2.foreachRDD(getInfo)
 
-
+'''
 mapping = {
   "mappings": {
     "properties": {
@@ -196,6 +195,17 @@ mapping = {
     }
   }
 }
+'''
+mapping = {
+    "mappings": {
+        "properties": {
+            "timestamp": {
+                "type": "date"
+            }
+        }
+    }
+}
+
 
 elastic = Elasticsearch(hosts=[elastic_host])
 
