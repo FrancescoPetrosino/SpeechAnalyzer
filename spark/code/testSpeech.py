@@ -3,7 +3,6 @@ import sys
 import json
 from json import loads
 from pyspark import SparkContext
-
 from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
 from pyspark.sql import Row
@@ -46,19 +45,7 @@ elastic_host="localhost"
 elastic_index="users"
 elastic_document="_doc"
 
-'''
-#conf1
 
-
-
-------------------------------------------------------------------------
-#conf2
-conf={ "es.resource" : "<INDEX> / <INDEX>", "es.mapping.id":"id", 
-         "es.input.json": "true", "es.net.http.auth.user":"elastic",
-         "es.write.operation":"index", "es.nodes.wan.only":"false",
-         "es.net.http.auth.pass":"changeme", "es.nodes":"<NODE1>, <NODE2>, <NODE3>...",
-         "es.port":"9200" })
-'''
 es_write_conf = {
 # specify the node that we are sending data to (this should be the master)
 "es.nodes" : elastic_host,
@@ -84,6 +71,7 @@ storage = sqlContext.createDataFrame(sc.emptyRDD(), schema)
 #tmpDf = sqlContext.createDataFrame(sc.emptyRDD(), schema)
 
 
+
 def getInfo(rdd):
 
 
@@ -101,17 +89,23 @@ def getInfo(rdd):
 
     print("---")
     df3 = sqlContext.createDataFrame(full, schema)
-    date_time = datetime_Rome.now().strftime("%m/%d/%Y")
+
+    #date_time = datetime_Rome.now()
+    #print("dat long")
+    #print(date_time)
+    
+    milli = int(datetime.now().strftime("%s")) * 1000 
+    print(milli)
+
 
     appendend  = storage.union(df3)
     appendend=appendend.withColumn("word_count", F.size(F.split(appendend['message'],' ')))
     appendend=appendend.withColumn("profanity_count",F.lit(count))
-    appendend=appendend.withColumn("time",F.lit(date_time))
+    appendend=appendend.withColumn("timestamp",F.lit(milli))
     appendend.show()
 
-    
 
-    new = appendend.rdd.map(lambda item: {'name': item['name'],'message': item['message'],'profanity_count': item['profanity_count'],'topic': item['topic'],'time': item['time']})
+    new = appendend.rdd.map(lambda item: {'timestamp': milli ,'name': item['name'],'message': item['message'],'profanity_count': item['profanity_count'],'topic': item['topic'],'words_count': item['word_count']})
     final_rdd = new.map(json.dumps).map(lambda x: ('key', x))
     print(final_rdd.collect())
       
@@ -136,7 +130,7 @@ lines2=lines.map(lambda x: loads(x.encode('utf-8')))
 #lines2.pprint()
 lines2.foreachRDD(getInfo)
 
-
+'''
 mapping = {
   "mappings": {
     "properties": {
@@ -144,10 +138,11 @@ mapping = {
       "message":  { "type": "text"  }, 
       "prof_count":   { "type": "integer"  },
       "words_count":   { "type": "integer"  },
-      "time":     { "type": "date", "format": "MM-dd-dd"}
+      "time":     { "type": "text"}
     }
   }
 }
+
 '''
 mapping = {
     "mappings": {
@@ -158,7 +153,7 @@ mapping = {
         }
     }
 }
-'''
+
 
 elastic = Elasticsearch(hosts=[elastic_host])
 
