@@ -14,6 +14,7 @@ RUN pip install pyspark
 RUN pip install pytz
 RUN pip install numpy 
 RUN pip install elasticsearch
+RUN pip install pandas
 
 # Create Sym Link 
 RUN ln -s /opt/spark-${SPARK_VERSION}-bin-hadoop2.7 ${SPARK_DIR} 

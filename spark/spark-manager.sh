@@ -16,7 +16,7 @@ echo "Running example ARGS $@"
 ./bin/pyspark --master local[2]
 ;;
 "spark-submit-python")
- ./bin/spark-submit --packages $2 /opt/tap/$1
+ ./bin/spark-submit  --packages $2 /opt/tap/$1
 ;;
 "spark-submit-apps")
  ./bin/spark-submit --packages $3 --class $1 /opt/tap/apps/$2

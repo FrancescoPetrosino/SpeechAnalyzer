@@ -16,7 +16,8 @@ from pyspark.sql import SQLContext
 import re
 from pyspark.sql.functions import lit
 import pytz
-from datetime import datetime
+import pandas as pd
+from datetime import date, datetime
 
 
 from elasticsearch import Elasticsearch
@@ -101,6 +102,18 @@ def transform(doc):
     return (_json)
 
 
+def print_rows(row):
+    data = json.loads(row)
+    for key in data:
+        print ("{key}:{value}".format(key=key, value=data[key]))
+
+def json_serial(obj):
+    """JSON serializer for objects not serializable by default json code"""
+
+    if isinstance(obj, (datetime, date)):
+        return obj.isoformat()
+    raise TypeError ("Type %s not serializable" % type(obj))
+
 def getInfo(rdd):
 
 
@@ -118,13 +131,21 @@ def getInfo(rdd):
 
     print("---")
     df3 = sqlContext.createDataFrame(full, schema)
-
+    date_time = datetime_Rome.now().strftime("%m/%d/%Y")
     appendend  = storage.union(df3)
     appendend=appendend.withColumn("word_count", F.size(F.split(appendend['message'],' ')))
     appendend=appendend.withColumn("profanity_count",F.lit(count))
-    appendend=appendend.withColumn("time",F.lit(datetime_Rome.now()))
+    appendend=appendend.withColumn("time",F.lit(date_time))
     appendend.show()
 
+    
+
+    new = appendend.rdd.map(lambda item: {'name': item['name'],'message': item['message'],'profanity_count': item['profanity_count'],'topic': item['topic'],'time': item['time']})
+    final_rdd = new.map(json.dumps).map(lambda x: ('key', x))
+    print(final_rdd.collect())
+    #print(json.dumps(appendend, indent=4,sort_keys=True,default=str))
+    #results = appendend.toJSON()
+    #results.foreach(print_rows)    
     '''
     #Metodo1
     appendend.write.format(
@@ -137,18 +158,24 @@ def getInfo(rdd):
     'es.resource', '%s/%s' % (elastic_index,elastic_document)
     ).save()
     '''
-    
+    '''
     #Metodo2
     rdd_mapped = appendend.rdd.map(lambda y: y.asDict())
-    result_rdd = rdd_mapped.map(transform)
+    result_rdd = rdd_mapped.map(json.dumps(appendend,indent=4, sort_keys=True, default=str))
     final_rdd = result_rdd.map(lambda x: ('key', x))
+    '''
+
+    print("***")
+    #print(final_rdd.collect())
+
+    
     final_rdd.saveAsNewAPIHadoopFile(
     path='-',
     outputFormatClass="org.elasticsearch.hadoop.mr.EsOutputFormat",
     keyClass="org.apache.hadoop.io.NullWritable",
     valueClass="org.elasticsearch.hadoop.mr.LinkedMapWritable",
     conf=es_write_conf)
-
+    
 
 kvs = KafkaUtils.createStream(ssc, zkQuorum, "spark-streaming-consumer", {topic: 1},)
 
@@ -159,13 +186,15 @@ lines2.foreachRDD(getInfo)
 
 
 mapping = {
-    "mappings": {
-        "properties": {
-            "timestamp": {
-                "type": "date"
-            }
-        }
+  "mappings": {
+    "properties": {
+      "name":    { "type": "text" },  
+      "message":  { "type": "text"  }, 
+      "prof_count":   { "type": "integer"  },
+      "words_count":   { "type": "integer"  },
+      "time":     { "type": "date", "format": "MM-dd-dd"}
     }
+  }
 }
 
 elastic = Elasticsearch(hosts=[elastic_host])
