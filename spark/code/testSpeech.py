@@ -145,24 +145,7 @@ def getInfo(rdd):
     final_rdd = new.map(json.dumps).map(lambda x: ('key', x))
     print(final_rdd.collect())
       
-    '''
-    #Metodo1
-    appendend.write.format(
-    'org.elasticsearch.spark.sql'
-    ).option(
-    'es.nodes', 'localhost'
-    ).option(
-    'es.port', 9200
-    ).option(
-    'es.resource', '%s/%s' % (elastic_index,elastic_document)
-    ).save()
-    '''
-    '''
-    #Metodo2
-    rdd_mapped = appendend.rdd.map(lambda y: y.asDict())
-    result_rdd = rdd_mapped.map(json.dumps(appendend,indent=4, sort_keys=True, default=str))
-    final_rdd = result_rdd.map(lambda x: ('key', x))
-    '''
+
 
     #print("***")
     #print(final_rdd.collect())
