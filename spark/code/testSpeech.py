@@ -130,20 +130,6 @@ lines2=lines.map(lambda x: loads(x.encode('utf-8')))
 #lines2.pprint()
 lines2.foreachRDD(getInfo)
 
-'''
-mapping = {
-  "mappings": {
-    "properties": {
-      "name":    { "type": "text" },  
-      "message":  { "type": "text"  }, 
-      "prof_count":   { "type": "integer"  },
-      "words_count":   { "type": "integer"  },
-      "time":     { "type": "text"}
-    }
-  }
-}
-
-'''
 mapping = {
     "mappings": {
         "properties": {

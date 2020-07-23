@@ -11,16 +11,23 @@ WAIT_TIME_SECONDS = 1
 
 import joblib
 
+with open('user.txt', 'r') as file:
+    data = file.read().split(' ')
 
+
+
+print(data[0])
+print(data[1])
 
 from MachineL.API import MLAPI
 model = MLAPI()
 
 
 
-
 from googletrans import Translator
 translator = Translator()
+
+
 
 
 r = sr.Recognizer()
@@ -40,8 +47,6 @@ def check_offline(text):
         if word in text :
             remplacement = "*" * len(word)
             text = text.replace(word ,remplacement)
-            #print word
-            #print remplacement
     return text
 
 
