@@ -7,7 +7,9 @@ python2.7 get-pip.py
 rm get-pip.py
 
 echo "[2/] Installo pulseaudio..\n"
-snap install pulseaudio
+sudo install pulseaudio
+sudo killall pulseaudio
+pulseaudio --start
 
 echo "[3/] Installo portaudio..\n"
 sudo apt install python-dev

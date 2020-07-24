@@ -16,9 +16,9 @@ with open('user.txt', 'r') as file:
 
 
 #Informazioni
-print(data[0])
-print(data[1])
-print(data[2])
+print(data[0]) #Nome
+print(data[1]) #Compagnia (Topic)
+print(data[2]) #Lenguage (English, Italian, ecc...)
 
 from MachineL.API import MLAPI
 model = MLAPI()
