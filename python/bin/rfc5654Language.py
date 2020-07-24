@@ -1,6 +1,6 @@
 from enum import Enum
 
-#Classe 
+#Classe per lo standard RFC5654
 class RfcLanguage(Enum):
     English = "en-US"
     Espanol = "es-ES"
@@ -8,6 +8,11 @@ class RfcLanguage(Enum):
     Deutsche = "de-DE"
     Francais = "fr-FR"
 
+
+#TRADUZIONI
+
+
+#python/bin/main3.py
 
 class StartToSpeachTranslate(Enum):
     English = "Start to speach"
@@ -36,3 +41,6 @@ class TranslateTextTranslate(Enum):
     Italiano = "predizione"
     Deutsche = "prognose"
     Francais = "prédiction"
+
+
+# ----
