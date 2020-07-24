@@ -15,15 +15,13 @@ with open('user.txt', 'r') as file:
     data = file.read().split(' ')
 
 
-
+#Informazioni
 print(data[0])
 print(data[1])
+print(data[2])
 
 from MachineL.API import MLAPI
 model = MLAPI()
-
-
-
 from googletrans import Translator
 translator = Translator()
 
