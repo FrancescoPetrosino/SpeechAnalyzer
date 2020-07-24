@@ -63,11 +63,11 @@ def main():
     with sr.Microphone() as source:
         r.adjust_for_ambient_noise(source)
 
-        print("Comincia a parlare")
+        print(StartToSpeachTranslate[data[2]].value)
 
         audio = r.listen(source)
         #print(audio)
-        print("elaboro il messaggio")
+        print(MessageProcessTranslate[data[2]].value)
 
        # file = open("testo.txt","w+")
 
@@ -80,11 +80,11 @@ def main():
             print(scrString)
 
             translated = translator.translate(filter_text, src=scrString,dest='en')
-            print("Testo tradotto  : "+translated.text)
+            print(TranslateTextTranslate[data[2]].value + " : " + translated.text)
                  
             
             number = model.getPrediction(translated.text)
-            print( " predetto : -- "+str(number))
+            print(TranslateTextTranslate[data[2]].value + " : -- " + str(number))
 
             wordArray=translated.text.split(' ')
             #print(wordArray)
