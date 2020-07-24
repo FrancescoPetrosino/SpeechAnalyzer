@@ -47,42 +47,35 @@ elastic_document="_doc"
 
 
 es_write_conf = {
-# specify the node that we are sending data to (this should be the master)
 "es.nodes" : elastic_host,
-# specify the port in case it is not the default port
 "es.port" : '9200',
-# specify a resource in the form 'index/doc-type'
 "es.resource" : '%s/%s' % (elastic_index,elastic_document),
-# is the input JSON?
 "es.input.json" : "yes"
 }
+
 # Elastic Search
 conf = SparkConf(loadDefaults=False)
 conf.set("es.index.auto.create", "true")
 
 
 
-schema = StructType([StructField("name", StringType(), True),StructField("message", StringType(), True),StructField("topic", StringType(),True)])
+schema = StructType([StructField("name", StringType(), True),StructField("message", StringType(), True),StructField("topic", StringType(),True),StructField("language",StringType(),True)])
 #cols = ['name', 'message']
 
 
-#storage=spark.createDataFrame(sc.emptyRDD[Row], schema)
+
 storage = sqlContext.createDataFrame(sc.emptyRDD(), schema)
-#tmpDf = sqlContext.createDataFrame(sc.emptyRDD(), schema)
+
 
 
 
 def getInfo(rdd):
 
 
-    full = rdd.map(lambda (value): json.loads(value)).map(lambda json_object: (json_object["name"], json_object["message"],json_object["topic"]))
-    #full2 = rdd.map(lambda (value): json.loads(value)).map(lambda json_object: (json_object["name"], json_object["topic"]))
+    full = rdd.map(lambda (value): json.loads(value)).map(lambda json_object: (json_object["name"], json_object["message"],json_object["topic"],json_object["language"]))
 
     line = full.map(lambda x: x[1])
-    #number = full2.map(lambda x: x[1])
-    #numberPredict = full.map(lambda x: x[2])
-
-    #counts = words.flatMap(lambda line: line.split(" ")).map(lambda word: (word, 1)).reduceByKey(lambda a, b: a+b)
+    
     words = line.flatMap(lambda line: line.split(" "))
     count = words.filter(lambda w : w.find("*")>=0).count()
 
@@ -90,12 +83,9 @@ def getInfo(rdd):
     print("---")
     df3 = sqlContext.createDataFrame(full, schema)
 
-    #date_time = datetime_Rome.now()
-    #print("dat long")
-    #print(date_time)
     
     milli = int(datetime.now().strftime("%s")) * 1000 
-    print(milli)
+    #print(milli)
 
 
     appendend  = storage.union(df3)
@@ -105,7 +95,7 @@ def getInfo(rdd):
     appendend.show()
 
 
-    new = appendend.rdd.map(lambda item: {'timestamp': milli ,'name': item['name'],'message': item['message'],'profanity_count': item['profanity_count'],'topic': item['topic'],'words_count': item['word_count']})
+    new = appendend.rdd.map(lambda item: {'timestamp': milli ,'name': item['name'],'message': item['message'],'profanity_count': item['profanity_count'],'words_count': item['word_count'],'language': item['language'],'topic': item['topic']})
     final_rdd = new.map(json.dumps).map(lambda x: ('key', x))
     print(final_rdd.collect())
       

@@ -1,7 +1,15 @@
 import tkinter as tk 
 from tkinter import ttk 
+from tkinter import messagebox
 
 def save_info():
+  if ((len(firstname_entry.get()) == 0) or (len(place_entry.get()) == 0)) :
+    print("Campi non validi")
+    messagebox.showerror("Error", "Fill the fields")
+    return
+
+
+
   firstname_info = firstname.get()
   place_info = place.get()
   language_info = language.get()  
@@ -23,7 +31,7 @@ def save_info():
 screen = tk.Tk()
 screen.minsize(400,400)
 screen.title("SpeechAnalyzer")
-#heading = tk.Label(text = "Please, submit your information", bg = "grey", fg = "black", width = "500", height = "3")
+
  
 firstname_text = ttk.Label(text = "Firstname : ",)
 firstname_text.grid(column = 0, row = 0)
@@ -43,11 +51,15 @@ language_entry = ttk.Combobox(screen,width = 27, textvariable = language)
 firstname_entry = ttk.Entry(screen,textvariable = firstname, width = "30")
 place_entry = ttk.Entry(screen,textvariable = place, width = "30")
 
-language_entry['values'] = ('Italian',  
+
+ 
+
+
+language_entry['values'] = ('Italiano',  
                           'English', 
-                          'French', 
-                          'German', 
-                          'Spanish')
+                          'Francais', 
+                          'Deutsche', 
+                          'Espanol')
 
 
 firstname_entry.grid(column = 1, row = 0)
@@ -55,7 +67,10 @@ place_entry.grid(column = 1, row = 15)
 language_entry.grid(column = 1, row = 30)
 language_entry.current(1) 
 
-register = ttk.Button(screen,text = "Register", command = save_info)
+register = ttk.Button(screen,text = "Register", command = save_info, state="normal")
 register.grid(column = 5, row = 30)
+
+
+
 
 screen.mainloop()
