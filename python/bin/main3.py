@@ -4,6 +4,9 @@ import os
 from json import dumps
 import pyaudio
 from kafka import KafkaProducer
+from rfc5654Language import RfcLanguage
+
+
 
 import threading,time
 WAIT_TIME_SECONDS = 1
@@ -16,9 +19,13 @@ with open('user.txt', 'r') as file:
 
 
 #Informazioni
-print(data[0]) #Nome
-print(data[1]) #Compagnia (Topic)
-print(data[2]) #Lenguage (English, Italian, ecc...)
+ #Nome
+ #Compagnia (Topic)
+ #Language (English, Italian, ecc...)
+
+#print("MyLG")
+#print(RfcLanguage[data[2]].value)
+
 
 from MachineL.API import MLAPI
 model = MLAPI()
@@ -29,12 +36,14 @@ translator = Translator()
 
 
 r = sr.Recognizer()
-name = input("Benvenuto, digita il tuo nome per entrare: ")
+#name = input("Benvenuto, digita il tuo nome per entrare: ")
 #name = "turi"
 
-pa = pyaudio.PyAudio()
-deviceIndex = 0
+name = data[0]
+topic = data[1].lower()
+myLanguage=RfcLanguage[data[2]].value
 
+print("******")
 
 
 def check_offline(text):
@@ -54,9 +63,6 @@ def main():
     with sr.Microphone() as source:
         r.adjust_for_ambient_noise(source)
 
-
-        #print("Current dir"+os.getcwd())
-        #input("Premi un tasto per cominciare a parlare")
         print("Comincia a parlare")
 
         audio = r.listen(source)
@@ -66,17 +72,15 @@ def main():
        # file = open("testo.txt","w+")
 
         try:
-            text = r.recognize_google(audio,language="it-IT")
-            #kikprint("you have said :" + text)
-            
+            text = r.recognize_google(audio,language=myLanguage)
             final_txt= (''.join(text)).lower()
-            #print("Final text : "+final_txt)
-
             filter_text=check_offline(final_txt)
-            print("Testo filtrato - IT : "+filter_text)
 
-            translated = translator.translate(filter_text, src="it",dest='en')
-            print("Testo filtrato - EN : "+translated.text)
+            scrString = myLanguage.split('-')[0]
+            print(scrString)
+
+            translated = translator.translate(filter_text, src=scrString,dest='en')
+            print("Testo tradotto  : "+translated.text)
                  
             
             number = model.getPrediction(translated.text)

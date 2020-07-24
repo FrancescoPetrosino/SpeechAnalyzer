@@ -2,6 +2,9 @@ import tkinter as tk
 from tkinter import ttk 
 from tkinter import messagebox
 
+import os
+import sys
+
 def save_info():
   if ((len(firstname_entry.get()) == 0) or (len(place_entry.get()) == 0)) :
     print("Campi non validi")
@@ -25,6 +28,9 @@ def save_info():
   firstname_entry.delete(0,tk.END)
   place_entry.delete(0,tk.END)
   language_entry.delete(0,tk.END)
+
+  print(os.getcwd())
+  os.system('python3 ./python/bin/main3.py')
 
 
 
