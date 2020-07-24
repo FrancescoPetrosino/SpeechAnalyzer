@@ -122,7 +122,7 @@ def main():
             json_str='{"'+fieldname+'":"'+name+'" , "message" : "'
             for word in wordArray[:-1] :
                 json_str += word + ' '
-            json_str += wordArray[-1] +'","'+topic+'" : "'+str(number)+'"}'
+            json_str += wordArray[-1] +'","'+topic+'" : "'+str(number)+'","language" : "'+scrString+'"}'
 
             print(json_str)
 
