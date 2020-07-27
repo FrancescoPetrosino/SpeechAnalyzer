@@ -35,7 +35,7 @@ class TranslateTextTranslate(Enum):
     Deutsche = "Übersetzter Text"
     Francais = "Texte traduit"
 
-class TranslateTextTranslate(Enum):
+class PredictionTranslate(Enum):
     English = "prediction"
     Espanol = "predicción"
     Italiano = "predizione"

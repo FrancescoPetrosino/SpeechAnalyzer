@@ -4,7 +4,7 @@ import os
 from json import dumps
 import pyaudio
 from kafka import KafkaProducer
-from rfc5654Language import RfcLanguage
+from rfc5654Language import *
 
 
 
@@ -14,10 +14,13 @@ WAIT_TIME_SECONDS = 1
 
 import joblib
 
+
+
+
 with open('user.txt', 'r') as file:
-    data = file.read().split(' ')
+     data = file.read().split(' ')
 
-
+print("****** Starting main******")
 #Informazioni
  #Nome
  #Compagnia (Topic)
@@ -43,7 +46,8 @@ name = data[0]
 topic = data[1].lower()
 myLanguage=RfcLanguage[data[2]].value
 
-print("******")
+print(myLanguage)
+language = data[2]
 
 
 def check_offline(text):
@@ -63,11 +67,11 @@ def main():
     with sr.Microphone() as source:
         r.adjust_for_ambient_noise(source)
 
-        print(StartToSpeachTranslate[data[2]].value)
+        print(StartToSpeachTranslate[language].value)
 
         audio = r.listen(source)
         #print(audio)
-        print(MessageProcessTranslate[data[2]].value)
+        print(MessageProcessTranslate[language].value)
 
        # file = open("testo.txt","w+")
 
@@ -80,11 +84,11 @@ def main():
             print(scrString)
 
             translated = translator.translate(filter_text, src=scrString,dest='en')
-            print(TranslateTextTranslate[data[2]].value + " : " + translated.text)
+            print(TranslateTextTranslate[language].value + " : " + translated.text)
                  
             
             number = model.getPrediction(translated.text)
-            print(TranslateTextTranslate[data[2]].value + " : -- " + str(number))
+            print(PredictionTranslate[language].value + " : -- " + str(number))
 
             wordArray=translated.text.split(' ')
             #print(wordArray)
