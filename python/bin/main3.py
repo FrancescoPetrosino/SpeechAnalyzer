@@ -13,7 +13,7 @@ WAIT_TIME_SECONDS = 1
 
 
 import joblib
-
+import uuid
 
 
 
@@ -21,6 +21,10 @@ with open('user.txt', 'r') as file:
      data = file.read().split(' ')
 
 print("****** Starting main******")
+
+
+
+
 #Informazioni
  #Nome
  #Compagnia (Topic)
@@ -45,6 +49,7 @@ r = sr.Recognizer()
 name = data[0]
 topic = data[1].lower()
 myLanguage=RfcLanguage[data[2]].value
+u_id = uuid.uuid4().hex[:8]
 
 print(myLanguage)
 language = data[2]
@@ -99,34 +104,13 @@ def main():
             key="key"
             fieldname="name"
             topic = "topic"
-
-            '''
-            #approccio 1
-            json_str='{"'+fieldname+'":"'+name+'" , "message" : [ '
-            for word in wordArray[:-1]:
-
-                print(date)
-                tmp='{"'+key+'":"'+word+'"},'
-                json_str+=tmp
-
-            #date=datetime_Rome.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
-            json_str+='{"'+key+'":"'+wordArray[-1]+'"}'
-            json_str+=']}'
             
-
-            #approccio 2
-            json_str = ''
-            for word in wordArray[:-1] :
-                json_str += '{"' + name + '" : "' + word + '"}, '
-
-            json_str += '{"' + name + '" : "' + wordArray[-1] + '"}'
-            '''
 
             #approccio 3
             json_str='{"'+fieldname+'":"'+name+'" , "message" : "'
             for word in wordArray[:-1] :
                 json_str += word + ' '
-            json_str += wordArray[-1] +'","'+topic+'" : "'+str(number)+'","language" : "'+scrString+'"}'
+            json_str += wordArray[-1] +'","'+topic+'" : "'+str(number)+'","language" : "'+scrString+'","id":"'+u_id+'"}'
 
             print(json_str)
 

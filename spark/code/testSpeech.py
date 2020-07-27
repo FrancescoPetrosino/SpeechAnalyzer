@@ -59,7 +59,7 @@ conf.set("es.index.auto.create", "true")
 
 
 
-schema = StructType([StructField("name", StringType(), True),StructField("message", StringType(), True),StructField("topic", StringType(),True),StructField("language",StringType(),True)])
+schema = StructType([StructField("id",StringType(),True),StructField("name", StringType(), True),StructField("message", StringType(), True),StructField("topic", StringType(),True),StructField("language",StringType(),True)])
 #cols = ['name', 'message']
 
 
@@ -72,7 +72,7 @@ storage = sqlContext.createDataFrame(sc.emptyRDD(), schema)
 def getInfo(rdd):
 
 
-    full = rdd.map(lambda (value): json.loads(value)).map(lambda json_object: (json_object["name"], json_object["message"],json_object["topic"],json_object["language"]))
+    full = rdd.map(lambda (value): json.loads(value)).map(lambda json_object: (json_object["id"],json_object["name"], json_object["message"],json_object["topic"],json_object["language"]))
 
     line = full.map(lambda x: x[1])
     
@@ -95,7 +95,7 @@ def getInfo(rdd):
     appendend.show()
 
 
-    new = appendend.rdd.map(lambda item: {'timestamp': milli ,'name': item['name'],'message': item['message'],'profanity_count': item['profanity_count'],'words_count': item['word_count'],'language': item['language'],'topic': item['topic']})
+    new = appendend.rdd.map(lambda item: {'timestamp': milli ,'id': item['id'],'name': item['name'],'message': item['message'],'profanity_count': item['profanity_count'],'words_count': item['word_count'],'language': item['language'],'topic': item['topic']})
     final_rdd = new.map(json.dumps).map(lambda x: ('key', x))
     print(final_rdd.collect())
       
