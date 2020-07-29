@@ -74,13 +74,14 @@ def getInfo(rdd):
 
     full = rdd.map(lambda (value): json.loads(value)).map(lambda json_object: (json_object["id"],json_object["name"], json_object["message"],json_object["topic"],json_object["language"]))
 
-    line = full.map(lambda x: x[1])
+    line = full.map(lambda x: x[2])
     
     words = line.flatMap(lambda line: line.split(" "))
     count = words.filter(lambda w : w.find("*")>=0).count()
 
 
     print("---")
+    print(count)
     df3 = sqlContext.createDataFrame(full, schema)
 
     

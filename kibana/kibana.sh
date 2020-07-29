@@ -9,4 +9,4 @@ docker container rm kibana
 docker build ../kibana/ --tag tap:kibana
 
 docker stop kibana
-docker run -p 5601:5601 --ip 10.0.100.52 --network tap tap:kibana
+docker run -p 5601:5601  -v /kb-volume --mount source=kb-volume,destination=/usr/share/kibana/data --network host tap:kibana
