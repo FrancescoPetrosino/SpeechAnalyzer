@@ -4,6 +4,7 @@ from tkinter import messagebox
 
 import os
 import sys
+import pathlib
 
 def save_info():
   if ((len(firstname_entry.get()) == 0) or (len(place_entry.get()) == 0)) :
@@ -28,6 +29,9 @@ def save_info():
   firstname_entry.delete(0,tk.END)
   place_entry.delete(0,tk.END)
   language_entry.delete(0,tk.END)
+
+  path = pathlib.Path(__file__).parent.absolute()
+  os.chdir(path)
 
   print(os.getcwd())
   os.system('python3 ./python/bin/main3.py')
