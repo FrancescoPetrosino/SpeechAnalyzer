@@ -12,8 +12,9 @@ import threading,time
 WAIT_TIME_SECONDS = 1
 
 
-import joblib
+import pickle
 import uuid
+from MachineL.API import MLAPI
 
 
 
@@ -34,8 +35,12 @@ print("****** Starting main******")
 #print(RfcLanguage[data[2]].value)
 
 
-from MachineL.API import MLAPI
-model = MLAPI()
+#from MachineL.API import MLAPI
+#model = MLAPI()
+
+model = None
+
+
 from googletrans import Translator
 translator = Translator()
 
@@ -66,7 +71,7 @@ def check_offline(text):
     return text
 
 
-def main():
+def sendInfo():
     
 
     with sr.Microphone() as source:
@@ -93,7 +98,7 @@ def main():
                  
             
             number = model.getPrediction(translated.text)
-            print(PredictionTranslate[language].value + " : -- " + str(number))
+            #print(PredictionTranslate[language].value + " : -- " + str(number))
 
             wordArray=translated.text.split(' ')
             #print(wordArray)
@@ -132,6 +137,8 @@ def main():
             print("Error : "+str(e))
 
 ticker = threading.Event()
-while not ticker.wait(WAIT_TIME_SECONDS):
-    #print(os.getcwd())
-    main()
+if __name__=='__main__':
+    with open('./python/bin/MachineL/kmodel.pkl', 'rb') as f:
+        model = pickle.load(f)
+    while not ticker.wait(WAIT_TIME_SECONDS):
+        sendInfo()

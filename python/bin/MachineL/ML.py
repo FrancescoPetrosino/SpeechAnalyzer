@@ -6,6 +6,8 @@ Created on Thu Jul 16 13:51:24 2020
 """
 
 
+#used to store model , future implementation
+
 import numpy as np 
 import pandas as pd 
 import matplotlib.pyplot as plt
@@ -16,8 +18,8 @@ from sklearn.cluster import KMeans
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem.snowball import SnowballStemmer
 from pathlib import Path
-
-import joblib
+import os
+import pickle
 
 stemmer = SnowballStemmer('english')
 tokenizer = RegexpTokenizer(r'[a-zA-Z\']+')
@@ -55,8 +57,16 @@ def init():
 
 if __name__ == "__main__":
     list = init()
-    joblib.dump(list[0], 'python/bin/MachineL/k_model.sav')
-    joblib.dump(list[1], 'python/bin/MachineL/vectroizer.pkl')
+    #joblib.dump(list[0], 'python/bin/MachineL/k_model.sav')
+    #joblib.dump(list[1], 'python/bin/MachineL/vectroizer.pkl')
+    Pkl_Filename = "Model.pkl"
+    with open(os.path.join('./python/bin/MachineL',Pkl_Filename), 'wb') as file:  
+        pickle.dump(list[0], file)
+
+    Pkl_Filename2 = "vect.pkl"
+    with open(os.path.join('./python/bin/MachineL',Pkl_Filename2), 'wb') as file2:  
+        pickle.dump(list[1], file2)
+
 
 '''
 Y = vectorizer3.transform(["today my team has scored 4 goals"])
