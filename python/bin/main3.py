@@ -16,7 +16,7 @@ import pickle
 import uuid
 from MachineL.API import MLAPI
 
-
+#POSSIBILE IMPLEMENTAZIONE FUTURA, le frasi dette le reinserisco nel dataset per poterlo ampliarlo
 
 with open('user.txt', 'r') as file:
      data = file.read().split(' ')
@@ -98,6 +98,18 @@ def sendInfo():
                  
             
             number = model.getPrediction(translated.text)
+            topicStr=""
+            switcher = { 
+                0: "Entertainment", 
+                1: "Sport", 
+                2: "Business",
+                3: "Tech",
+                4: "Politics", 
+            }
+
+            topicStr=switcher.get(number,"None") 
+
+
             #print(PredictionTranslate[language].value + " : -- " + str(number))
 
             wordArray=translated.text.split(' ')
@@ -115,7 +127,7 @@ def sendInfo():
             json_str='{"'+fieldname+'":"'+name+'" , "message" : "'
             for word in wordArray[:-1] :
                 json_str += word + ' '
-            json_str += wordArray[-1] +'","'+topic+'" : "'+str(number)+'","language" : "'+scrString+'","id":"'+u_id+'"}'
+            json_str += wordArray[-1] +'","'+topic+'" : "'+topicStr+'","language" : "'+scrString+'","id":"'+u_id+'"}'
 
             print(json_str)
 

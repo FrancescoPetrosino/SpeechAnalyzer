@@ -49,7 +49,7 @@ class MLAPI(object):
 
         #print(len(words))
 
-        kmeans = KMeans(n_clusters = 8, n_init = 20, n_jobs = 3) # n_init(number of iterations for clsutering) n_jobs(number of cpu cores to use)
+        kmeans = KMeans(n_clusters = 5, n_init = 20, n_jobs = 2) # n_init(number of iterations for clsutering) n_jobs(number of cpu cores to use)
         kmeans.fit(X3)
 
 
