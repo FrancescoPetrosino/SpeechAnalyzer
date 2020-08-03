@@ -19,8 +19,9 @@ def save_info():
   language_info = language.get()  
   print(firstname_info,place_info,language_info)
 
-
-
+  path = pathlib.Path(__file__).parent.absolute()
+  os.chdir(path)
+  print(os.getcwd())
   file = open("user.txt", "w")
   file.write('{} {} {}'.format(firstname_info, place_info,language_info))
   file.close()
@@ -30,10 +31,9 @@ def save_info():
   place_entry.delete(0,tk.END)
   language_entry.delete(0,tk.END)
 
-  path = pathlib.Path(__file__).parent.absolute()
-  os.chdir(path)
+  
 
-  print(os.getcwd())
+  
   os.system('python3 ./python/bin/main3.py')
 
 
