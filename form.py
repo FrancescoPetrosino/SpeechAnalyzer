@@ -22,7 +22,7 @@ def save_info():
   path = pathlib.Path(__file__).parent.absolute()
   os.chdir(path)
   print(os.getcwd())
-  file = open("user.txt", "w")
+  file = open("./spark/user.txt", "w")
   file.write('{} {} {}'.format(firstname_info, place_info,language_info))
   file.close()
   print(" User ", firstname_info, " has been registered successfully")

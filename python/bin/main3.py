@@ -5,7 +5,7 @@ from json import dumps
 import pyaudio
 from kafka import KafkaProducer
 from rfc5654Language import *
-
+from kafka.admin import KafkaAdminClient, NewTopic
 
 
 import threading,time
@@ -18,7 +18,7 @@ from MachineL.API import MLAPI
 
 #POSSIBILE IMPLEMENTAZIONE FUTURA, le frasi dette le reinserisco nel dataset per poterlo ampliarlo
 
-with open('user.txt', 'r') as file:
+with open('./spark/user.txt', 'r') as file:
      data = file.read().split(' ')
 
 print("****** Starting main******")
@@ -52,12 +52,26 @@ r = sr.Recognizer()
 #name = "turi"
 
 name = data[0]
-topic = data[1].lower()
+
+topicKafka = data[1].lower()
+
 myLanguage=RfcLanguage[data[2]].value
 u_id = uuid.uuid4().hex[:8]
 
 print(myLanguage)
 language = data[2]
+
+try:
+    admin_client = KafkaAdminClient(
+        bootstrap_servers="192.168.1.28:9092", 
+        client_id='test'
+    )
+    topic_list = [NewTopic(name=topicKafka, num_partitions=1, replication_factor=1)]
+    admin_client.create_topics(new_topics=topic_list, validate_only=False)
+
+except Exception as e:
+    print("Topic exists : "+str(e)) 
+
 
 
 def check_offline(text):
@@ -138,7 +152,7 @@ def sendInfo():
             
             data = json_str
 
-            producer.send('myTap',value=data)
+            producer.send(topicKafka,value=data)
            
 
 

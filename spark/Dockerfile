@@ -21,12 +21,7 @@ RUN ln -s /opt/spark-${SPARK_VERSION}-bin-hadoop2.7 ${SPARK_DIR}
 #ADD ./dataset/* /opt/tap/dataset
 ADD ./code/*  /opt/tap/
 ADD ./spark-manager.sh $SPARK_DIR/bin/spark-manager
-
-## Copy All conf here
-#ADD conf/* /opt/flume/conf/
-# Add compiled lib
-#ADD lib/* /opt/flume/lib/
-#EXPOSE 44444
+ADD ./user.txt /opt/tap/
 
 WORKDIR ${SPARK_DIR}
 ENTRYPOINT [ "spark-manager" ]

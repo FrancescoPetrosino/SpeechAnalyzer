@@ -17,7 +17,7 @@ from pyspark.sql.functions import lit
 import pytz
 import pandas as pd
 from datetime import date, datetime
-
+import os
 
 from elasticsearch import Elasticsearch
 
@@ -26,6 +26,10 @@ from elasticsearch import Elasticsearch
 tz_Rome = pytz.timezone('Europe/Rome')
 datetime_Rome = datetime.now(tz_Rome)
 
+with open('../tap/user.txt', 'r') as file:
+     data = file.read().split(' ')
+
+topicKafka = data[1].lower()     
 
 import sys
 reload(sys)
@@ -39,7 +43,7 @@ spark=SparkSession(sc)
 sqlContext = SQLContext(sc)
 
 zkQuorum="127.0.0.1:2181"
-topic = "myTap"
+topic = topicKafka
 
 elastic_host="localhost"
 elastic_index="users"
@@ -81,6 +85,7 @@ def getInfo(rdd):
 
 
     print("---")
+    print(topicKafka)
     print(count)
     df3 = sqlContext.createDataFrame(full, schema)
 
