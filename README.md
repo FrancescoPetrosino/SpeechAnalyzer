@@ -2,7 +2,7 @@
 
 ## Progetto Technologies for Advanced Programming 2019/2020
 - Aldo Fiorito X81000447
-- Francesco Petrosino X81000533
+- Francesco Petrosino X81000533\
 Studenti presso Università di Catania cdl Informatica
 
 
@@ -59,5 +59,5 @@ Inserire il proprio nome e la propria compagnia, infine selezionare la lingua de
 [1]: https://studentiunict-my.sharepoint.com/:f:/g/personal/uni389952_studium_unict_it/EtiOBtdaJKZMj9zeuzJJ9UcB60rLKQOOjFG6yk92CBy8JQ?e=YJqarn "Repository OneDrive sp"
 [2]: https://studentiunict-my.sharepoint.com/:u:/g/personal/uni389952_studium_unict_it/EeNAcubCzxxOpPPCLQOAznABSBqiCYsNhG7ZTEXAaENepg?e=jsPF6m "Repository OneDrive es"
 [3]:https://docs.docker.com/get-docker/ "Docker"
-[4]:https://pypi.org/project/SpeechRecognition/ "SpeechRecognition"SpeechAnalyzer"
-[5]:https://discord.com/new
+[4]:https://pypi.org/project/SpeechRecognition/"SpeechRecognition"
+[5]:https://discord.com/new "Discord"
