@@ -29,9 +29,7 @@ Lo scopo finale di quest'ultimo è quello di fornire statistiche e metriche su n
     - python-dev
     - portaudio19-dev
     - PyAudio
-
-## Setup 
-- 
+## Setup
 ### Ip statico
 Affinchè il programma funzioni in locale bisogna avere un server host. Per fare questo è necessario : 
 - Clonare o scaricare il repository
@@ -61,4 +59,5 @@ Inserire il proprio nome e la propria compagnia, infine selezionare la lingua de
 [1]: https://studentiunict-my.sharepoint.com/:f:/g/personal/uni389952_studium_unict_it/EtiOBtdaJKZMj9zeuzJJ9UcB60rLKQOOjFG6yk92CBy8JQ?e=YJqarn "Repository OneDrive sp"
 [2]: https://studentiunict-my.sharepoint.com/:u:/g/personal/uni389952_studium_unict_it/EeNAcubCzxxOpPPCLQOAznABSBqiCYsNhG7ZTEXAaENepg?e=jsPF6m "Repository OneDrive es"
 [3]:https://docs.docker.com/get-docker/ "Docker"
-[4]:https://pypi.org/project/SpeechRecognition/ "SpeechRecognition"SpeechAnalyzer
+[4]:https://pypi.org/project/SpeechRecognition/ "SpeechRecognition"SpeechAnalyzer"
+[5]:https://discord.com/new
