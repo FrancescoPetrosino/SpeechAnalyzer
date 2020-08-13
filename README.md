@@ -56,9 +56,9 @@ Affinchè il programma funzioni in locale bisogna avere un server host. Per fare
 - Come ultima cartella andare su "kibana"
     - ./kibana.sh
 
-Aprire una nuova console di comando e spostarsi nella root di  "SpeechAnalyzer" 
-e lanciare il comando : "python3 form.py"
-Inserire il proprio nome e la propria compagnia, infine selezionare la lingua desiderata e registrarsi.
+Aprire una nuova console di comando e spostarsi nella root di  "SpeechAnalyzer"\
+lanciare il comando : "python3 form.py"
+Inserire il proprio nome e la propria compagnia,infine selezionare la lingua desiderata e registrarsi.
 
 [1]: https://studentiunict-my.sharepoint.com/:f:/g/personal/uni389952_studium_unict_it/EtiOBtdaJKZMj9zeuzJJ9UcB60rLKQOOjFG6yk92CBy8JQ?e=YJqarn "Repository OneDrive sp"
 [2]: https://studentiunict-my.sharepoint.com/:u:/g/personal/uni389952_studium_unict_it/EeNAcubCzxxOpPPCLQOAznABSBqiCYsNhG7ZTEXAaENepg?e=jsPF6m "Repository OneDrive es"
