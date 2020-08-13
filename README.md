@@ -39,6 +39,10 @@ Affinchè il programma funzioni in locale bisogna avere un server host. Per fare
 - Aggiungere il file [spark-2.4.5-bin-hadoop2.7.tgz][1] sulla directory spark/setup/
 ### Setup Elastic
 - Aggiungere il file [elasticsearch-hadoop-7.8.0.jar][2] sulla directory spark/setup/
+### Rimozione volumi
+- Affinchè l'applicativo parti come da ex novo bisogna rimuovere alcuni options startup dai file .sh\ nello specifico da elastic.sh e da kibana.sh\
+  I tag -v , --mount e destistion=
+
 
 ### Guida per l'utilizzo
 **N.B Tutti i comandi devono essere lanciati in terminali differenti**
