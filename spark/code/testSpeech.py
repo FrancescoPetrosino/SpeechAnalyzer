@@ -85,7 +85,7 @@ def getInfo(rdd):
 
 
     print("---")
-    print(topicKafka)
+    print(topicKafka) ## implementazione futura
     print(count)
     df3 = sqlContext.createDataFrame(full, schema)
 
