@@ -11,7 +11,7 @@ L'idea è nata osservando una community di persone all'interno dell'applicativo 
 Lo scopo finale di quest'ultimo è quello di fornire statistiche e metriche su numerosi flussi vocali all’interno della stessa rete, in quanto l'applicativo permette di raccogliere informazioni da uno o più utenti
 
 ## Architettura e Design
-
+![](DocsProgetto/schema.jpg)
 ## Note di utilizzo (user end)
 
 ## Tecnologie utilizzate
