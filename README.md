@@ -11,8 +11,7 @@ L'idea è nata osservando una community di persone all'interno dell'applicativo 
 Lo scopo finale di quest'ultimo è quello di fornire statistiche e metriche su numerosi flussi vocali all’interno della stessa rete, in quanto l'applicativo permette di raccogliere informazioni da uno o più utenti
 
 ## Architettura e Design
-![](DocsProgetto/schema.jpg)
-## Note di utilizzo (user end)
+![](DocsProgetto/schema.png)
 
 ## Tecnologie utilizzate
 - Sintetizzatore vocale : [SpeechRecognition][4] (Google Speech Recognition)
@@ -35,6 +34,8 @@ Affinchè il programma funzioni in locale bisogna avere un server host. Per fare
 - Clonare o scaricare il repository
 - assegnare un indirizzo ip statico a una macchina
 - Editare la seguente linea listeners=PLAINTEXT://**ipstatico**:9092 presente sul file SpeechAnalyzer/kafkaServer/conf/server.properties
+
+Tutte i container sono fatti partire in host mode
 ### Setup Spark
 - Aggiungere il file [spark-2.4.5-bin-hadoop2.7.tgz][1] sulla directory spark/setup/
 ### Setup Elastic
