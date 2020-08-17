@@ -15,7 +15,7 @@ Lo scopo finale di quest'ultimo è quello di fornire statistiche e metriche su n
 
 ## Tecnologie utilizzate
 - Sintetizzatore vocale : [SpeechRecognition][4] (Google Speech Recognition)
-- Zookeaper
+- Zookeeper
 - Kafka Connect e Kafka Streaming
 - Spark Spark Streaming 
 - ElasticSearch

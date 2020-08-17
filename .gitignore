@@ -3,7 +3,6 @@
 ./python/bin/MachineL/model.pkl
 ./python/bin/MachineL/vectroizer.pkl
 ./python/bin/model.py
-./user.txt
 ./python/bin/MachineL/ML.py
-./user.txt
+./spark/user.txt
 ./spark/console3Es.txt
