@@ -7,7 +7,9 @@ Studenti presso Università di Catania cdl Informatica
 
 
 ## Idea e scopo
-L'idea è nata osservando una community di persone all'interno dell'applicativo VOIP per le chat vocali [Discord][5]. La domanda principale posta è stata "Chi è il più chiacchierone del gruppo?". Da qui sono nate una serie di idee per ciò che sarebbe stato SpeechAnalyzer.
+L'idea è nata osservando una community di persone all'interno dell'applicativo VOIP per le chat vocali [Discord][5]. <br />
+La domanda principale posta è stata "Chi è il più chiacchierone del gruppo?". 
+Da qui sono nate una serie di idee per ciò che sarebbe stato SpeechAnalyzer. <br  />
 Lo scopo finale di quest'ultimo è quello di fornire statistiche e metriche su numerosi flussi vocali all’interno della stessa rete, in quanto l'applicativo permette di raccogliere informazioni da uno o più utenti
 
 ## Architettura e Design
